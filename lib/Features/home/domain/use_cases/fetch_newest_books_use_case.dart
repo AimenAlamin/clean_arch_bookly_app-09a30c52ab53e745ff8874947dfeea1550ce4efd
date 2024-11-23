@@ -10,6 +10,7 @@ class FetchNewestdBooksUseCase extends UseCase<List<BookEntity>, void> {
   FetchNewestdBooksUseCase(this.homeRepo);
   @override
   Future<Either<Failure, List<BookEntity>>> call([void param]) async {
+    // check permssion
     return await homeRepo.fetchNewestBooks();
   }
 }
