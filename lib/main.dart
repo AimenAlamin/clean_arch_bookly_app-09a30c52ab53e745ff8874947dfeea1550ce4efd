@@ -12,6 +12,7 @@ import 'package:bookly/constants.dart';
 import 'package:bookly/core/utils/Functions/setup_getIt.dart';
 import 'package:bookly/core/utils/api_service.dart';
 import 'package:bookly/core/utils/app_router.dart';
+import 'package:bookly/core/utils/simple_bloc_observer.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,7 +28,7 @@ void main() async {
   await Hive.openBox<BookEntity>(KFeaturedBooks);
   await Hive.openBox<BookEntity>(KNewestBooks);
   setupGetIt();
-
+  Bloc.observer = SimpleBlocObserver();
   runApp(const Bookly());
 }
 
@@ -44,16 +45,18 @@ class Bookly extends StatelessWidget {
               FetchFeaturedBooksUseCase(
                 getIt.get<HomeRepoImpl>(),
               ),
-            );
+            )..fetchFeaturedBooksUseCase;
           },
         ),
-        BlocProvider(create: (context) {
-          return NewestBooksCubit(
-            FetchNewestdBooksUseCase(
-              getIt.get<HomeRepoImpl>(),
-            ),
-          );
-        })
+        BlocProvider(
+          create: (context) {
+            return NewestBooksCubit(
+              FetchNewestdBooksUseCase(
+                getIt.get<HomeRepoImpl>(),
+              ),
+            )..fetchNewestBooksUseCase;
+          },
+        ),
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.router,
